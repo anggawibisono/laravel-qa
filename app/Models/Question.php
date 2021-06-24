@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Parsedown;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -20,7 +21,7 @@ class Question extends Model
     }
 
     public function getUrlAttribute(){
-        return route("questions.show",$this->id);
+        return route("questions.show",$this->slug);
     }
     public function getCreatedDateAttribute(){
         return $this->created_at->diffForHumans();
@@ -34,5 +35,9 @@ class Question extends Model
             return "answered";
         }
         return "unanswered";
+    }
+
+    public function getBodyHtmlAttribute(){
+        return \Parsedown::instance()->text($this->body);
     }
 }
